@@ -51,7 +51,6 @@ public class MovieApiClient {
 
         retrieveMoviesRunnable = new RetrieveMoviesRunnable(query, pageNumber);
 
-
         final Future myHandler = AppExecutors.getInstance().networkIO().submit(retrieveMoviesRunnable);
 
         AppExecutors.getInstance().networkIO().schedule(new Runnable() {
@@ -60,7 +59,7 @@ public class MovieApiClient {
                 //cancel retrofit call
                 myHandler.cancel(true);
             }
-        }, 5000, TimeUnit.MICROSECONDS);
+        }, 3000, TimeUnit.MILLISECONDS);
     }
 
     //retrieve data from restAPI by runnable class
