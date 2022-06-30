@@ -3,17 +3,23 @@ package lt.vcs.movieappbd;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import lt.vcs.movieappbd.adapters.MovieRecyclerView;
+import lt.vcs.movieappbd.adapters.OnMovieListener;
 import lt.vcs.movieappbd.models.MovieModel;
+import lt.vcs.movieappbd.repositories.MovieRepository;
 import lt.vcs.movieappbd.request.Service;
 import lt.vcs.movieappbd.response.MovieSearchResponse;
 import lt.vcs.movieappbd.utils.Constants;
@@ -23,9 +29,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnMovieListener {
 
-    Button btn;
+    private RecyclerView recyclerView;
+    private MovieRecyclerView movieRecyclerAdapter;
 
     private MovieListViewModel movieListViewModel;
 
@@ -33,18 +40,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        btn = findViewById(R.id.button);
+        recyclerView = findViewById(R.id.recyclerView);
 
         movieListViewModel = new ViewModelProvider(this).get(MovieListViewModel.class);
 
+        ConfigureRecyclerView();
         ObserveAnyChange();
+        searchMovieApi("shrek", 1);
 
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                searchMovieApi("Fast", 1);
-            }
-        });
     }
 
     private void ObserveAnyChange(){
@@ -54,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
                 if(movieModels != null){
                     for(MovieModel movieModel: movieModels){
                         Log.v("Tag", "onChanged: " +movieModel.getTitle());
+
+                        movieRecyclerAdapter.setMovies(movieModels);
                     }
                 }
 
@@ -63,6 +68,23 @@ public class MainActivity extends AppCompatActivity {
 
     private void searchMovieApi(String query, int pageNumber){
         movieListViewModel.searchMovieApi(query, pageNumber);
+    }
+
+    private void ConfigureRecyclerView(){
+        movieRecyclerAdapter = new MovieRecyclerView(this);
+
+        recyclerView.setAdapter(movieRecyclerAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    @Override
+    public void onMovieClick(int position) {
+        Toast.makeText(this, "Position: " + position, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onCategoryClick(String category) {
+
     }
 
 //    private void GetRetrofitResponse() {
