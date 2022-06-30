@@ -1,5 +1,6 @@
 package lt.vcs.movieappbd;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
@@ -77,7 +78,18 @@ public class MainActivity extends AppCompatActivity implements OnMovieListener {
 
         recyclerView.setAdapter(movieRecyclerAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if(!recyclerView.canScrollVertically(1)){
+                movieListViewModel.searchNextPage();
+                }
+            }
+        });
     }
+
 
     @Override
     public void onMovieClick(int position) {
