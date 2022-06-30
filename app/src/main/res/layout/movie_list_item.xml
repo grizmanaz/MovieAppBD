@@ -73,7 +73,8 @@
                 android:id="@+id/rating_bar"
                 android:layout_margin="10dp"
                 android:numStars="5"
-                android:contentDescription="rating bar"/>
+                android:contentDescription="rating bar"
+                android:theme="@style/RatingBar"/>
 
         </LinearLayout>
 
