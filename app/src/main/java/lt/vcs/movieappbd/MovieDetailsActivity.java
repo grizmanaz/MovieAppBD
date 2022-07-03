@@ -8,6 +8,8 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import lt.vcs.movieappbd.models.MovieModel;
 
 public class MovieDetailsActivity extends AppCompatActivity {
@@ -32,7 +34,15 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private void GetDataFromIntent() {
         if (getIntent().hasExtra("movie")){
             MovieModel movieModel = getIntent().getParcelableExtra("movie");
-            Log.v("Tag", "Incoming intent" + movieModel.getTitle());
+
+            titleDetails.setText(movieModel.getTitle());
+            descDetails.setText(movieModel.getMovie_overview());
+            ratingBarDetails.setRating((movieModel.getVote_average())/2);
+
+            Glide.with(this)
+                    .load("https://image.tmdb.org/t/p/w500/"
+                    +movieModel.getPoster_path())
+                    .into(imageViewDetails);
 
         }
     }
